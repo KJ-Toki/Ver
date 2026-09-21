@@ -14,7 +14,7 @@
     .start-subtext { font-size: 0.85rem; color: #94a3b8; margin-top: 10px; }
     @keyframes pulseGlow { 0% { transform: scale(0.98); box-shadow: 0 0 20px rgba(250, 204, 21, 0.2); } 100% { transform: scale(1.03); box-shadow: 0 0 40px rgba(250, 204, 21, 0.5); } }
     canvas { display: block; width: 100vw; height: 100vh; }
-    #messageBox { position: absolute; bottom: 6%; left: 50%; transform: translateX(-50%); width: 90%; max-width: 600px; text-align: center; z-index: 10; pointer-events: none; }
+    #messageBox { position: absolute; bottom: 12%; left: 50%; transform: translateX(-50%); width: 90%; max-width: 600px; text-align: center; z-index: 10; pointer-events: none; }
     .card-msg { font-size: 1.1rem; color: #fef08a; background: rgba(10, 10, 22, 0.85); border: 1.5px solid rgba(250, 204, 21, 0.6); border-radius: 14px; padding: 16px 24px; box-shadow: 0 0 30px rgba(0, 0, 0, 0.9), inset 0 0 15px rgba(250, 204, 21, 0.1); line-height: 1.6; opacity: 0; transition: opacity 1.2s ease; font-weight: 600; backdrop-filter: blur(8px); }
     .card-msg.visible { opacity: 1; }
     #letterBtn { position: absolute; bottom: 25px; left: 25px; z-index: 15; background: rgba(15, 23, 42, 0.9); border: 2px solid #facc15; color: #fef08a; padding: 14px 22px; border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 0.95rem; box-shadow: 0 0 20px rgba(250, 204, 21, 0.35); transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); display: flex; align-items: center; gap: 10px; opacity: 0; pointer-events: none; }
@@ -40,11 +40,92 @@
     .letter-content h3 { color: #854d0e; margin-bottom: 12px; text-align: center; font-size: 1.25rem; border-bottom: 2px solid #fef08a; padding-bottom: 6px; }
     .close-modal-btn { position: absolute; top: 25px; right: 25px; background: rgba(255, 255, 255, 0.1); border: 1.5px solid #facc15; color: #facc15; font-size: 1.5rem; width: 42px; height: 42px; border-radius: 50%; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: all 0.3s; z-index: 110; }
     .close-modal-btn:hover { background: rgba(250, 204, 21, 0.25); transform: rotate(90deg); }
+
+    /* ===== AJUSTES PARA CELULAR ===== */
+    @media (max-width: 600px) {
+      /* El mensaje se separa más del fondo para no chocar con el botón */
+      #messageBox {
+        bottom: 18%;
+        width: 92%;
+      }
+      .card-msg {
+        font-size: 0.9rem;
+        padding: 12px 16px;
+        line-height: 1.5;
+      }
+      /* El botón "Abreme" se hace más pequeño y compacto */
+      #letterBtn {
+        bottom: 14px;
+        left: 14px;
+        padding: 9px 14px;
+        font-size: 0.78rem;
+        gap: 6px;
+        border-radius: 10px;
+        border-width: 1.5px;
+      }
+      /* La carta también se adapta al móvil */
+      .envelope-container {
+        width: 290px;
+        height: 195px;
+      }
+      .envelope-flap {
+        border-left-width: 145px;
+        border-right-width: 145px;
+        border-top-width: 105px;
+      }
+      .envelope-pocket {
+        border-left-width: 145px;
+        border-right-width: 145px;
+        border-bottom-width: 105px;
+      }
+      .letter-paper {
+        width: 262px;
+        height: 165px;
+        bottom: 10px;
+        left: 14px;
+        padding: 18px 16px;
+      }
+      .envelope-wrapper.open .letter-paper {
+        height: 320px;
+        width: 310px;
+        left: -10px;
+        transform: translateY(-130px);
+      }
+      .letter-content { font-size: 0.85rem; }
+      .letter-content h3 { font-size: 1.05rem; }
+      .side-bouquet {
+        width: 75px;
+        height: 130px;
+      }
+      .side-bouquet.left { left: -65px; }
+      .side-bouquet.right { right: -65px; }
+      .close-modal-btn {
+        top: 15px;
+        right: 15px;
+        width: 38px;
+        height: 38px;
+        font-size: 1.3rem;
+      }
+    }
+
+    /* ===== AJUSTES PARA CELULARES MUY PEQUEÑOS ===== */
+    @media (max-width: 380px) {
+      #letterBtn {
+        padding: 8px 12px;
+        font-size: 0.72rem;
+      }
+      .card-msg {
+        font-size: 0.82rem;
+        padding: 10px 14px;
+      }
+      #messageBox {
+        bottom: 20%;
+      }
+    }
   </style>
 </head>
 <body>
 
-  <!-- Audio con tu canción de Catbox -->
   <audio id="bgMusic" loop preload="auto" src="https://files.catbox.moe/0q8zvl.mp3"></audio>
 
   <div id="startOverlay">
@@ -73,7 +154,7 @@
           <defs>
             <radialGradient id="yPetalGrad" cx="50%" cy="20%" r="80%"><stop offset="0%" stop-color="#fff89a"/><stop offset="50%" stop-color="#facc15"/><stop offset="85%" stop-color="#d97706"/><stop offset="100%" stop-color="#78350f"/></radialGradient>
             <radialGradient id="yCoreGrad" cx="35%" cy="35%" r="65%"><stop offset="0%" stop-color="#78350f"/><stop offset="70%" stop-color="#451a03"/><stop offset="100%" stop-color="#1a0c03"/></radialGradient>
-            <radialGradient id="roseGrad" cx="35%" cy="30%" r="70%"><stop offset="0%" stop-color="#fda4af"/><stop offset="40%" stop-color="#f43f5e"/><stop offset="80%" stop-color="#be123c"/><stop offset="100%" stop-color="#4c0519"/></radialGradient>
+            <radialGradient id="roseGrad" cx="35%" cy="30%" r="70%"><stop offset="0%" stop-color="#fdf4af"/><stop offset="40%" stop-color="#f43f5e"/><stop offset="80%" stop-color="#be123c"/><stop offset="100%" stop-color="#4c0519"/></radialGradient>
             <filter id="bloomShadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="2" dy="4" stdDeviation="3.5" flood-color="#000" flood-opacity="0.5"/></filter>
           </defs>
           <path d="M 50,165 Q 35,110 45,55" fill="none" stroke="#14532d" stroke-width="4.5" stroke-linecap="round" filter="url(#bloomShadow)"/>
@@ -232,17 +313,12 @@
       type();
     }
 
-    // --- EVENTOS ---
     startOverlay.addEventListener('click', () => {
       startOverlay.style.opacity = '0';
       setTimeout(() => startOverlay.style.visibility = 'hidden', 800);
       isRunning = true;
-
-      // Reproducir la música con el clic real del usuario
-      bgMusic.volume = 0.7; // Ajusta el volumen (0.0 a 1.0)
-      bgMusic.play().catch(e => {
-        console.log("Error al reproducir:", e);
-      });
+      bgMusic.volume = 0.7;
+      bgMusic.play().catch(e => { console.log("Error al reproducir:", e); });
     });
 
     letterBtn.addEventListener('click', () => letterModal.classList.add('active'));
